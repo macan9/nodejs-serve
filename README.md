@@ -34,6 +34,7 @@ server.listen(port, () => {
 
 - 对/news 页面进行get请求
 ```javascript
+const app = express();
 app.get('/news', (req, res)=>{
     // 可以打印出url和请求的路由参数
     console.log(req.url, req.params, req.query)
