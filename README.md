@@ -82,7 +82,8 @@ app.get('/middle', loggingMiddleware, (req, res)=>{
 ## 4. 用模板引擎渲染页面
  Express 对当今主流的模板引擎（例如 Pug、Handlebars、EJS 等等）提供了很好的支持，可以做到两行代码接入。
 
- 安装模板渲染引擎，创建首页模板 index.hbs, 创建联系页面模板 contact.hbs, 相当于前端页面
+ 安装模板渲染引擎，创建首页模板 index.hbs, 创建联系页面模板 contact.hbs, 相当于前端页面, 
+ 渲染引擎让静态文件和html可以在页面中显示出来
 
  `npm install hbs`
 ``` js
