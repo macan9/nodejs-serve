@@ -1,7 +1,19 @@
 # nodejs-serve
 
-## 1. 利用 http 启动一个服务 
+## 1.安装环境 利用 http 启动一个服务
+安装 express 框架
 
+`npm install express --save`
+
+安装 node 服务热重载
+
+`npm install nodemon --save -dev`
+
+修改 package.json下的启动脚本
+
+`"start": "nodemon server.js"`
+
+当前目录新建文件server.js
 ```javascript
 const http = require('http');
 const hostname = 'localhost';
@@ -16,6 +28,7 @@ server.listen(port, () => {
     console.log(`Server is running at http://${hostname}:${port}`);
 });
 ```
+ 运行脚本 `npm start` 可以看到 ` Server is running at http://localhost:8001 `
 
 ## 2. 请求响应路由
 
@@ -68,6 +81,10 @@ app.get('/middle', loggingMiddleware, (req, res)=>{
 
 ## 4. 用模板引擎渲染页面
  Express 对当今主流的模板引擎（例如 Pug、Handlebars、EJS 等等）提供了很好的支持，可以做到两行代码接入。
+
+ 安装模板渲染引擎，创建首页模板 index.hbs, 创建联系页面模板 contact.hbs, 相当于前端页面
+
+ `npm install hbs`
 ``` js
 // 指定模板存放目录   app.set('views', path);
 app.set('views', 'views');
