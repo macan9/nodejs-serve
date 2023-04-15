@@ -1,146 +1,148 @@
-# nodejs-serve
+# nodejs-mysql
 
-## 1.安装环境 利用 http 启动一个服务
-安装 express 框架
+## 1.安装 node mysql 框架
 
-`npm install express --save`
+`npm install mysql --save`
 
-安装 node 服务热重载
-
-`npm install nodemon --save -dev`
-
-修改 package.json下的启动脚本
-
-`"start": "nodemon server.js"`
-
-当前目录新建文件server.js
+当前目录新建配置文件 conf/db.config.js 
 ```javascript
-const http = require('http');
-const hostname = 'localhost';
-const port = 8085;
-
-const server = http.createServer((req, res) => {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/html');
-    res.end('Hello other World\n');
-});
-server.listen(port, () => {
-    console.log(`Server is running at http://${hostname}:${port}`);
-});
-```
- 运行脚本 `npm start` 可以看到 ` Server is running at http://localhost:8001 `
-
-## 2. 请求响应路由
-
-- 对/news 页面进行get请求
-```javascript
-const app = express();
-app.get('/news', (req, res)=>{
-    // 可以打印出url和请求的路由参数
-    console.log(req.url, req.params, req.query)
-    res.send('Hello news');
-});
-```
-- 对/about 页面进行post请求
-```javascript
-app.post('/about', (req, res)=>{
-    res.send('Hello about');
-});
-```
-- 对/list* 可匹配 /list+任意字符
-```javascript
-app.get('/list*', (req, res)=>{
-    res.send('Hello list pages');
-})
-```
-
-- 监听服务
-```javascript
-app.listen(8083, ()=>{
-    console.log('Server1 is running at http://localhost:8083')
-})
-```
-
-
-
-## 3. 中间键
-中间键就是对客户端请求发起后可能执行的方法，可以全局注册，和对应的url注册
-> app.get('/middleware', someMiddleware, (req, res) => {}) 
-> 
-> app.use(someMiddleware); 放在app get 前
-> 
-``` javascript
-function loggingMiddleware(req, res, next) {
-    const time = new Date();
-    console.log(`time:[${time.toLocaleString()}], method: ${req.method},url: ${req.url}`);
-    next();
+module.exports = {
+    host: 'localhost', // 服务器地址
+    user: 'root', // mysql用户名称
+    password: '', // mysql用户密码
+    port: '3306', // 端口
+    database: 'test', // 数据库名称
 }
-app.get('/middle', loggingMiddleware, (req, res)=>{
-    res.send('middle测试');
-});
 ```
 
-## 4. 用模板引擎渲染页面
- Express 对当今主流的模板引擎（例如 Pug、Handlebars、EJS 等等）提供了很好的支持，可以做到两行代码接入。
-
- 安装模板渲染引擎，创建首页模板 index.hbs, 创建联系页面模板 contact.hbs, 相当于前端页面, 
- 渲染引擎让静态文件和html可以在页面中显示出来
-
- `npm install hbs`
-``` js
-// 指定模板存放目录   app.set('views', path);
-app.set('views', 'views');
-
-// 指定模板引擎为 Handlebars
-app.set('view engine', 'hbs');
-
-app.get('/', (req, res) => {
-    res.render('index');
-});
-  
-app.get('/contact', (req, res) => {
-    res.render('contact');
-})
+## 2. serve.js中建立链接 
+``` js 
+const mysql = require('mysql'); 
+const mysql_conf = require('./conf/db.config')
+const connection = mysql.createConnection(mysql_conf);
+connection.connect();
+/* 此处写各种数据库的操作 */
+connection.end();
 ```
 
+## 3.启动 mysql 
 
-## 5. 添加静态文件服务
- 通常网站需要提供静态文件服务，例如图片、CSS 文件、JS 文件等等，
- 而 Express 已经自带了静态文件服务中间件 express.static，使用起来非常方便
+下载 Laragon 启动服务，即可让数据库运行在3306端口
 
-> 添加静态文件中间件如下，并指定静态资源根目录为 public [path]
+![image-20230415124131052](https://gitee.com/mc150324/PicGo/raw/master/img/image-20230415124131052.png)
+
+下载 Navicat 创建并链接 test 数据库
+
+![屏幕截图_20230415_124259](https://gitee.com/mc150324/PicGo/raw/master/img/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE_20230415_124259.png)
+
+## 4.导入 websites.sql 
+
+点击数据库链接，运行 SQL 文件, 即可新建表和添加数据
+```sql
+/*
+ Navicat MySQL Data Transfer
+ Source Server         : 127.0.0.1
+ Source Server Version : 50621
+ Source Host           : localhost
+ Source Database       : RUNOOB
+
+ Target Server Version : 50621
+ File Encoding         : utf-8
+
+ Date: 05/18/2016 11:44:07 AM
+*/
+
+SET NAMES utf8;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+--  Table structure for `websites`
+-- ----------------------------
+DROP TABLE IF EXISTS `websites`;
+CREATE TABLE `websites` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` char(20) NOT NULL DEFAULT '' COMMENT '站点名称',
+  `url` varchar(255) NOT NULL DEFAULT '',
+  `alexa` int(11) NOT NULL DEFAULT '0' COMMENT 'Alexa 排名',
+  `country` char(10) NOT NULL DEFAULT '' COMMENT '国家',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+--  Records of `websites`
+-- ----------------------------
+BEGIN;
+INSERT INTO `websites` VALUES ('1', 'Google', 'https://www.google.cm/', '1', 'USA'), ('2', '淘宝', 'https://www.taobao.com/', '13', 'CN'), ('3', '菜鸟教程', 'http://www.runoob.com/', '4689', 'CN'), ('4', '微博', 'http://weibo.com/', '20', 'CN'), ('5', 'Facebook', 'https://www.facebook.com/', '3', 'USA');
+COMMIT;
+
+SET FOREIGN_KEY_CHECKS = 1;
+```
+## 数据库操作，即sql 增删改查语句
+`SELECT * FROM [sheet]` 查
 ```js
-app.use(express.static('public'));
-// 已下链接可以直接在浏览器中访问对应的静态资源
-// http://localhost:8083/style/index.css
-// http://localhost:8083/img/wall_paper.jpg
-```
-
-
-## 6.实现 JSON API
- Express 为我们封装了一个 json 方法，直接就可以将一个 JavaScript 对象作为 JSON 数据返回 
- ```js
-app.get('/apis', (req, res) => {
-    res.json({ name: '图雀社区', website: 'https://tuture.co' });
+const  sql = 'SELECT * FROM websites';
+connection.query(sql,function (err, result) {
+        if(err){
+          console.log('[SELECT ERROR] - ',err.message);
+          return;
+        }
+ 
+       console.log('--------------------------SELECT----------------------------');
+       console.log(result);
+       console.log('------------------------------------------------------------\n\n');  
 });
 ```
+即可获取数据到数据库数据
 
-## 7.处理 404 和服务器错误
+![image-20230415125701741](C:\Users\MaZahn\AppData\Roaming\Typora\typora-user-images\image-20230415125701741.png)
+
+`INSERT INTO [sheet[attr]] ` 增
+
 ```js
-// 匹配空路由 返回404
-app.use('*', (req, res) => {
-    res.status(404).render('404', { url: req.originalUrl });
-});
-
-// 模拟服务器抛出错误
-app.get('/broken', (req, res) => {
-    throw new Error('Broken!');
-});
-// 返回 500 页面
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).render('500');
+const  addSql = 'INSERT INTO websites(Id,name,url,alexa,country) VALUES(0,?,?,?,?)';
+const  addSqlParams = ['菜鸟工具', 'https://c.runoob.com','23453', 'CN'];
+connection.query(addSql,addSqlParams,function (err, result) {
+        if(err){
+         console.log('[INSERT ERROR] - ',err.message);
+         return;
+        }        
+ 
+       console.log('--------------------------INSERT----------------------------');
+       //console.log('INSERT ID:',result.insertId);        
+       console.log('INSERT ID:',result);        
+       console.log('-----------------------------------------------------------------\n\n');  
 });
 ```
+`UPDATE [sheet] SET [attr]` 改
+
+```js
+const modSql = 'UPDATE websites SET name = ?,url = ? WHERE Id = ?';
+const modSqlParams = ['菜鸟移动站', 'https://m.runoob.com',6];
+connection.query(modSql,modSqlParams,function (err, result) {
+   if(err){
+         console.log('[UPDATE ERROR] - ',err.message);
+         return;
+   }        
+  console.log('--------------------------UPDATE----------------------------');
+  console.log('UPDATE affectedRows',result.affectedRows);
+  console.log('-----------------------------------------------------------------\n\n');
+});
+```
+`DELETE FROM [sheet]` 删 
+```js
+const delSql = 'DELETE FROM websites where id=6';
+connection.query(delSql,function (err, result) {
+        if(err){
+          console.log('[DELETE ERROR] - ',err.message);
+          return;
+        }        
+ 
+       console.log('--------------------------DELETE----------------------------');
+       console.log('DELETE affectedRows',result.affectedRows);
+       console.log('-----------------------------------------------------------------\n\n');  
+});
+```
+
+
 
 

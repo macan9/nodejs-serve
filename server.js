@@ -40,22 +40,64 @@ app.listen(port, () => {
 });
 
 
-
+// 建立数据库链接
 const connection = mysql.createConnection(mysql_conf);
 connection.connect();
-const  addSql = 'INSERT INTO websites(Id,name,url,alexa,country) VALUES(0,?,?,?,?)';
-const  addSqlParams = ['菜鸟工具', 'https://c.runoob.com','23453', 'CN'];
+
+// INSERT INTO 添加到数据库
 //增
-connection.query(addSql,addSqlParams,function (err, result) {
-        if(err){
-         console.log('[INSERT ERROR] - ',err.message);
-         return;
-        }        
+// const  addSql = 'INSERT INTO websites(Id,name,url,alexa,country) VALUES(0,?,?,?,?)';
+// const  addSqlParams = ['菜鸟工具', 'https://c.runoob.com','23453', 'CN'];
+// connection.query(addSql,addSqlParams,function (err, result) {
+//         if(err){
+//          console.log('[INSERT ERROR] - ',err.message);
+//          return;
+//         }        
  
-       console.log('--------------------------INSERT----------------------------');
-       //console.log('INSERT ID:',result.insertId);        
-       console.log('INSERT ID:',result);        
-       console.log('-----------------------------------------------------------------\n\n');  
+//        console.log('--------------------------INSERT----------------------------');
+//        //console.log('INSERT ID:',result.insertId);        
+//        console.log('INSERT ID:',result);        
+//        console.log('-----------------------------------------------------------------\n\n');  
+// });
+
+//查
+const  sql = 'SELECT * FROM websites';
+connection.query(sql,function (err, result) {
+        if(err){
+          console.log('[SELECT ERROR] - ',err.message);
+          return;
+        }
+ 
+       console.log('--------------------------SELECT----------------------------');
+       console.log(result);
+       console.log('------------------------------------------------------------\n\n');  
 });
+
+
+//改
+// const modSql = 'UPDATE websites SET name = ?,url = ? WHERE Id = ?';
+// const modSqlParams = ['菜鸟移动站', 'https://m.runoob.com',6];
+// connection.query(modSql,modSqlParams,function (err, result) {
+//    if(err){
+//          console.log('[UPDATE ERROR] - ',err.message);
+//          return;
+//    }        
+//   console.log('--------------------------UPDATE----------------------------');
+//   console.log('UPDATE affectedRows',result.affectedRows);
+//   console.log('-----------------------------------------------------------------\n\n');
+// });
+
+// //删
+// const delSql = 'DELETE FROM websites where id=6';
+// connection.query(delSql,function (err, result) {
+//         if(err){
+//           console.log('[DELETE ERROR] - ',err.message);
+//           return;
+//         }        
+ 
+//        console.log('--------------------------DELETE----------------------------');
+//        console.log('DELETE affectedRows',result.affectedRows);
+//        console.log('-----------------------------------------------------------------\n\n');  
+// });
  
 connection.end();
