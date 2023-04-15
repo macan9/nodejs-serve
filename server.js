@@ -4,7 +4,7 @@ const path = require('path');
 const indexRouter = require('./routes/index');
 const apiRouter = require('./routes/api');
 const mysql = require('mysql'); 
-const mysql_conf = require('./conf/db.config')
+const mysql_conf = require('./config/db.config')
 
 const hostname = 'localhost';
 const port = 8001;
