@@ -94,7 +94,7 @@ connection.query(sql,function (err, result) {
 ```
 即可获取数据到数据库数据
 
-![image-20230415125701741](C:\Users\MaZahn\AppData\Roaming\Typora\typora-user-images\image-20230415125701741.png)
+![image-20230415125701741](https://gitee.com/mc150324/PicGo/raw/master/img/image-20230415125701741.png)
 
 `INSERT INTO [sheet[attr]] ` 增
 
