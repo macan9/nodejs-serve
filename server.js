@@ -5,9 +5,10 @@ const indexRouter = require('./routes/index');
 const apiRouter = require('./routes/api');
 const mysql = require('mysql'); 
 const mysql_conf = require('./conf/db.config')
+const serve_conf = require('./conf/serve.conf')
 
-const hostname = 'localhost';
-const port = 8001;
+const hostname = serve_conf.host;
+const port = serve_conf.port;
 
 const app = express();
 
